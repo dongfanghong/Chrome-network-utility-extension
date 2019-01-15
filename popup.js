@@ -62,23 +62,25 @@ chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
         });
 
         function work() {
-            chrome.processes.getProcessIdForTab(currTab.id, function(id) {
-                chrome.runtime.sendMessage({ type: "process", id: id }, function(response) {
-                    let elem = document.getElementById("cpuTotal");
-                    elem.innerText = "total cpu usage:\n" + response.cpuTotal.toFixed(1) + "%";
-                    elem = document.getElementById("cpuTab");
-                    elem.innerText = "tab cpu usage:\n" + response.cpuTab.toFixed(1) + "%";
-                    elem = document.getElementById("netTotal");
-                    elem.innerText = "total network usage:\n" + displaySpeed(response.netTotal);
-                    elem = document.getElementById("netTab");
-                    elem.innerText = "tab network usage:\n" + displaySpeed(response.netTab)
-                    elem = document.getElementById("memTotal");
-                    elem.innerText = "total memory usage:\n" + displayMemory(response.memTotal);
-                    elem = document.getElementById("memTab");
-                    elem.innerText = "tab memory usage:\n" + displayMemory(response.memTab);
-
+            try{
+                chrome.processes.getProcessIdForTab(currTab.id, function(id) {
+                    chrome.runtime.sendMessage({ type: "process", id: id }, function(response) {
+                        let elem = document.getElementById("cpuTotal");
+                        elem.innerText = "total cpu usage:\n" + response.cpuTotal.toFixed(1) + "%";
+                        elem = document.getElementById("cpuTab");
+                        elem.innerText = "tab cpu usage:\n" + response.cpuTab.toFixed(1) + "%";
+                        elem = document.getElementById("netTotal");
+                        elem.innerText = "total network usage:\n" + displaySpeed(response.netTotal);
+                        elem = document.getElementById("netTab");
+                        elem.innerText = "tab network usage:\n" + displaySpeed(response.netTab)
+                        elem = document.getElementById("memTotal");
+                        elem.innerText = "total memory usage:\n" + displayMemory(response.memTotal);
+                        elem = document.getElementById("memTab");
+                        elem.innerText = "tab memory usage:\n" + displayMemory(response.memTab);
+    
+                    });
                 });
-            });
+            } catch (err) {}
         }
         work();
         setInterval(work, 3000);
